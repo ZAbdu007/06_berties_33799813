@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <title>API documentation - <%= shopData.shopName %></title>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+  </head>
+  <body>
+    <h1>API endpoints for <%= shopData.shopName %></h1>
+
+    <h2>GET /api/books</h2>
+    <p>Returns all books as JSON.</p>
+    <pre>GET /api/books</pre>
+
+    <h3>Search by name</h3>
+    <p>Use the <code>q</code> query parameter:</p>
+    <pre>GET /api/books?q=Harry</pre>
+
+    <h3>Filter by price</h3>
+    <p>Use <code>minPrice</code> and/or <code>maxPrice</code>:</p>
+    <pre>GET /api/books?minPrice=15&amp;maxPrice=25</pre>
+
+    <h3>Combine search and price filters</h3>
+    <pre>GET /api/books?q=Lord&amp;minPrice=20</pre>
+
+    <p><a href="/">Back to home</a></p>
+  </body>
+</html>

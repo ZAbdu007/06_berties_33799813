@@ -1,7 +1,9 @@
-// Import express and ejs
-var express = require ('express')
+var express = require('express')
 var ejs = require('ejs')
 const path = require('path')
+var mysql = require('mysql2')
+var session = require('express-session')  
+
 
 // Create the express application object
 const app = express()
@@ -13,23 +15,43 @@ app.set('view engine', 'ejs')
 // Set up the body parser 
 app.use(express.urlencoded({ extended: true }))
 
+app.use(session({
+  secret: 'change_this_secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 600000 } // 10 minutes
+}));
+
 // Set up public folder (for css and static js)
 app.use(express.static(path.join(__dirname, 'public')))
 
 // Define our application-specific data
 app.locals.shopData = {shopName: "Bertie's Books"}
 
+// Database connection pool
+const db = mysql.createPool({
+  host: 'localhost',
+  user: 'berties_books_app',
+  password: 'qwertyuiop',
+  database: 'berties_books',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+global.db = db;
+
 // Load the route handlers
-const mainRoutes = require("./routes/main")
+const mainRoutes = require('./routes/main')
 app.use('/', mainRoutes)
 
-// Load the route handlers for /users
 const usersRoutes = require('./routes/users')
 app.use('/users', usersRoutes)
 
-// Load the route handlers for /books
 const booksRoutes = require('./routes/books')
 app.use('/books', booksRoutes)
+
+const apiRoutes = require('./routes/api')
+app.use('/api', apiRoutes)
 
 // Start the web app listening
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
